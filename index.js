@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 // Main Routes
-app.get('/api/payment', paymentRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 3000;

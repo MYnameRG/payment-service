@@ -1,17 +1,19 @@
+const Razorpay = require('razorpay');
+
 class RazorpayIntegration {
-    constructor(apiKey, secretKey) {
-        this.apiKey = apiKey;
-        this.secretKey = secretKey;
+    API_KEY;
+    API_SECRET_KEY;
+
+    constructor(API_KEY, API_SECRET_KEY) {
+        this.API_KEY = API_KEY;
+        this.API_SECRET_KEY = API_SECRET_KEY;
     }
 
-    createPayment(amount, currency, customerDetails) {
-        // Implement Razorpay integration to create a payment
-        // Return the payment ID
-    }
-
-    verifyPayment(paymentId, paymentSignature) {
-        // Implement Razorpay integration to verify the payment
-        // Return true if the payment is verified, false otherwise
+    getGatewayClient = () => {
+        return new Razorpay({
+            key_id: this.API_KEY,
+            key_secret: this.API_SECRET_KEY
+        });
     }
 }
 

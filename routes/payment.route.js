@@ -2,10 +2,10 @@ const express = require('express');
 const PaymentController = require('../controllers/payment.controller');
 
 const router = express.Router();
+const PaymentServiceController = new PaymentController();
 
-// Define routes for payment operations
-router.get('/create', new PaymentController.createPayments);
+router.post('/order/create', PaymentServiceController.createOrder);
 
-router.get('/verify', new PaymentController.verifyPayments);
+router.post('/verify', PaymentServiceController.verifyPayments);
 
 module.exports = router;
