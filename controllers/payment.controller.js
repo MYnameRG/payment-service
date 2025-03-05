@@ -1,11 +1,14 @@
 const PaymentGatewayService = require('../services/payment-gateways/payment-gateway.service');
 const EmailService = require('../services/emails/email.service');
+const PaymentReportService = require('../services/payment-report.service');
 
 class PaymentController {
     PaymentGatewayService;
+    PaymentReportService;
     EmailService;
 
     constructor() {
+        this.PaymentReportService = new PaymentReportService();
         this.PaymentGatewayService = new PaymentGatewayService('razorpay');
         this.EmailService = new EmailService(process.env.ETHERAL_USERNAME, process.env.ETHERAL_PASSWORD);
     }
@@ -35,6 +38,20 @@ class PaymentController {
             } else {
                 return res.status(400).json({ success: false, message: 'Payment verification failed!' });
             }
+        } catch (error) {
+            return res.status(500).json({ error: { ...error } });
+        }
+    }
+
+    generatePaymentsExcel = async (req, res) => {
+        try {
+            const payments = await this.PaymentGatewayService.fetchPayments();
+            if (payments.length == 0) return res.status(400).json({ success: false, message: 'No Payments are done.' });
+
+            const reportLink = this.PaymentReportService.generateReportLink({ data: payments });
+            if (reportLink) return res.status(400).json({ success: false, message: 'No Link is generated.' });
+
+            return res.status(200).json({ success: true, message: 'Excel file generated successfully!' });
         } catch (error) {
             return res.status(500).json({ error: { ...error } });
         }

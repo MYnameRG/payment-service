@@ -6,6 +6,8 @@ const PaymentServiceController = new PaymentController();
 
 router.post('/order/create', PaymentServiceController.createOrder);
 
-router.post('/verify', PaymentServiceController.verifyPayments);
+router.post('/verify/transaction', PaymentServiceController.verifyPayments);
+
+router.get('/generate/excel', PaymentServiceController.generatePaymentsExcel);
 
 module.exports = router;

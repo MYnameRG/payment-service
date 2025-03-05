@@ -23,32 +23,26 @@ class RazorpayService {
     }
   }
 
-  createPayment = async ({ amount, currency = 'INR', email = "test@example.com", contact = "9999999999", order_id, method = "upi", vpa }) => {
+  fetchPayments = async () => {
     try {
-      const payment = this.RazorpayClient.payments({
-        amount: amount,
-        currency: currency,
-        email: email,
-        contact: contact,
-        order_id: order_id,
-        method: method,
-        vpa: (method == 'upi') ? vpa : null
-      });
-  
-      return payment;
-    } catch(e) {
-      console.log(e)
-      throw new Error({ ...e });
+      const payments = this.RazorpayClient.payments.all();
+      return payments;
+    } catch (e) {
+      throw new Error(e);
     }
   }
 
   verifyPayment = async ({ razorpay_order_id, razorpay_payment_id, razorpay_signature }) => {
-    const generatedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-      .digest('hex');
+    try {
+      const generatedSignature = crypto
+        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        .digest('hex');
 
-    return generatedSignature === razorpay_signature;
+      return generatedSignature === razorpay_signature;
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 }
 

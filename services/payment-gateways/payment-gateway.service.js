@@ -23,6 +23,15 @@ class PaymentGatewayService {
         }
     }
 
+    fetchPayments = async () => {
+        try {
+            const payments = await this.RazorpayService.fetchPayments();
+            return payments;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
     verifyPayment = async ({ razorpay_order_id, razorpay_payment_id, razorpay_signature }) => {
         try {
             let isValid = false;

@@ -9,11 +9,18 @@
 
 <body>
     <h1>Razorpay Payment Gateway Integration</h1>
-    <form id="payment-form">
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" required>
-        <button type="button" onclick="payNow()">Pay Now</button>
-    </form>
+    <div class="payment-form" style="display: flex;">
+        <div style="padding: 0 5px;" class="payment-button">
+            <form>
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" required>
+                <button type="button" onclick="payNow()">Pay Now</button>
+            </form>
+        </div>
+        <div style="padding: 0 5px;" id="Generate-excel-report-button">
+            <button type="button" onclick="generateExcel()">Generate Last Payments Excel Report</button>
+        </div>
+    </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
         async function payNow() {
@@ -41,7 +48,7 @@
                 name: 'Test Payment',
                 description: 'Test Transaction',
                 order_id: order.id, // This is the order_id created in the backend
-                callback_url: 'http://localhost:3000/api/payment/verify', // Your success URL
+                callback_url: 'http://localhost:3000/api/payment/verify/transaction', // Your success URL
                 // prefill: {
                 //     name: 'Gaurav Kumar',
                 //     email: 'gaurav.kumar@example.com',
@@ -54,6 +61,22 @@
 
             const rzp = new Razorpay(options);
             rzp.open();
+        }
+
+        async function generateExcel() {
+            const response = await fetch('http://localhost:3000/api/payment/generate/excel', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                alert('Excel file generated successfully!');
+            } else {
+                alert('Failed to generate Excel file!');
+            }
         }
     </script>
 </body>
